@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t angtb/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true angtb/react-test npm test
+
+after_success:
+  - docker build -t angtb/multi-client ./client
+  - docker build -t angtb/multi-nginx ./nginx
+  - docker build -t angtb/multi-server ./server
+  - docker build -t angtb/multi-worker ./worker
+  # Login to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images to docker hub
+  - docker push angtb/multi-client
+  - docker push angtb/multi-nginx
+  - docker push angtb/multi-server
+  - docker push angtb/multi-worker
+  
+
+
