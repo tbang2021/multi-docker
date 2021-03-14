@@ -21,5 +21,18 @@ after_success:
   - docker push angtb/multi-server
   - docker push angtb/multi-worker
   
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: multi-docker1
+  env: Multidocker1-env
+  bucket_name: elasticbeanstalk-us-east-2-420253496884
+  bucket_path: docker-multi
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_ID
+  secret_access_key: $AWS_SECRET_KEY
+
+  
 
 
